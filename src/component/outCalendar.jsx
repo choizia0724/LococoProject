@@ -70,6 +70,8 @@ const Content = ({
   </Container>
 );
 const MaterialCalendar = ({ data, resource }) => {
+  console.log(data);
+  console.log(resource);
   const [schedulerData, setSchedulerData] = useState(data);
   return (
     <Paper>

@@ -8,7 +8,7 @@ const Mycards = (props) => {
         {props.raid &&
           props.raid.map((x, i) => {
             return (
-              <Card key={i} flush>
+              <Card key={i} flush='true'>
                 <Card.Img variant='top' src={x.Image} />
                 <Card.ImgOverlay className='bg-black bg-opacity-50'>
                   <Card.Text className='text-white'>{x.Name}</Card.Text>
