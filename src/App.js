@@ -1,21 +1,18 @@
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Main from './page/main';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
 
-import Header from './component/header';
-import Raid from './page/raid';
-import { Container, Row, Col } from 'react-bootstrap';
 function App() {
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
   return (
-    <>
-      <Header />
-      <Container>
-        <Row>
-          <Col lg={12}>
-            <Raid />
-          </Col>
-        </Row>
-      </Container>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/:char' element={<Main />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

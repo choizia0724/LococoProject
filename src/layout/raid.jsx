@@ -33,21 +33,23 @@ const Raid = () => {
 
   return (
     <>
-      {gameContentsArr.map((x, i) =>
-        gameContentsData[x.code] ? (
-          <Mycards
-            key={i}
-            raid={gameContentsData[x.code].Raids || gameContentsData[x.code]}
-            rewardItems={
-              gameContentsData[x.code].RewardItems ||
-              gameContentsData[x.code][0]?.RewardItems
-            }
-            name={x.name}
-          />
-        ) : (
-          <p key={i}>Loading...</p>
-        )
-      )}
+      <div className='row'>
+        {gameContentsArr.map((x, i) =>
+          gameContentsData[x.code] ? (
+            <Mycards
+              key={i}
+              raid={gameContentsData[x.code].Raids || gameContentsData[x.code]}
+              rewardItems={
+                gameContentsData[x.code].RewardItems ||
+                gameContentsData[x.code][0]?.RewardItems
+              }
+              name={x.name}
+            />
+          ) : (
+            <p key={i}>Loading...</p>
+          )
+        )}
+      </div>
     </>
   );
 };

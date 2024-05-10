@@ -11,7 +11,6 @@ import styled from 'styled-components';
 import { Stars } from 'react-bootstrap-icons';
 
 const Mymodal = (props) => {
-  console.log(props);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);

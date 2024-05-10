@@ -1,32 +1,23 @@
-import { Card, CardGroup } from 'react-bootstrap';
-import Mymodal from './modal';
+import { Card, Col } from 'react-bootstrap';
 
 const Mycards = (props) => {
   return (
-    <div className='pt-4'>
-      <h5>
-        {props.name}
-        <Mymodal
-          title={props.name}
-          reward={props.rewardItems}
-          level={props.raid[0].MinItemLevel}
-        />
-      </h5>
-      <div className='d-flex flex-column flex-sm-row'>
+    <Col xs={12} lg={props.name === '도전 어비스 던전' ? 4 : 8}>
+      <div className='pt-4 fs-5'>{props.name}</div>
+      <div className='d-flex gap-1'>
         {props.raid &&
           props.raid.map((x, i) => {
             return (
-              <Card key={i}>
+              <Card key={i} flush>
                 <Card.Img variant='top' src={x.Image} />
                 <Card.ImgOverlay className='bg-black bg-opacity-50'>
-                  <Card.Title className='text-white'>{x.Name}</Card.Title>
-                  {/* <Card.Text>{x.Description}</Card.Text> */}
+                  <Card.Text className='text-white'>{x.Name}</Card.Text>
                 </Card.ImgOverlay>
               </Card>
             );
           })}
       </div>
-    </div>
+    </Col>
   );
 };
 export default Mycards;
