@@ -14,7 +14,7 @@ const MyCharacter = ({ ArmoryProfile }) => {
             md={4}
             className='d-flex flex-column justify-content-around'
           >
-            <Row className='text-sm-center py-3'>
+            <Row className='text-md-center py-3'>
               <Col xs={12}>
                 <div className='text-warning'>원정대 레벨</div>
                 <div className='display-5  align-content-end'>
@@ -35,12 +35,12 @@ const MyCharacter = ({ ArmoryProfile }) => {
                 </div>
               </Col>
             </Row>
-            <Row className='flex-column text-sm-center py-3'>
+            <Row className='flex-column text-md-center py-3'>
               <Col className=' fs-6'>
                 <span className='text-info'>{ArmoryProfile?.Title}</span>
               </Col>
             </Row>
-            <Row className='flex-column text-sm-center py-3'>
+            <Row className='flex-column text-md-center py-3'>
               <Col>
                 <div>장착 아이템 레벨</div>
                 <div className='display-6'>{ArmoryProfile?.ItemAvgLevel}</div>
