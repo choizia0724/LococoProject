@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.css": "//LococoProject/static/css/main.03c40ebe.css",
-    "main.js": "//LococoProject/static/js/main.3268cf0e.js",
-    "index.html": "//LococoProject/index.html"
+    "main.css": "/LococoProject/static/css/main.03c40ebe.css",
+    "main.js": "/LococoProject/static/js/main.124c1b4b.js",
+    "index.html": "/LococoProject/index.html"
   },
   "entrypoints": [
     "static/css/main.03c40ebe.css",
-    "static/js/main.3268cf0e.js"
+    "static/js/main.124c1b4b.js"
   ]
 }
