@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
@@ -47,7 +47,7 @@ const Content = ({
         <div className='d-flex align-items-center'>
           <Clock />
           <span className='px-2'>
-            {moment(appointmentData.startDate).format('hh:mm')}
+            {moment(appointmentData.startDate).format('HH:mm')}
           </span>
         </div>
       </Col>
@@ -69,13 +69,13 @@ const Content = ({
     })}
   </Container>
 );
+
 const MaterialCalendar = ({ data, resource }) => {
-  console.log(data);
-  console.log(resource);
   const [schedulerData, setSchedulerData] = useState(data);
+
   return (
     <Paper>
-      <Scheduler data={schedulerData} height={500} firstDayOfWeek={4}>
+      <Scheduler data={data} height={500} firstDayOfWeek={3}>
         <ViewState defaultCurrentViewName='Week' />
 
         <DayView />

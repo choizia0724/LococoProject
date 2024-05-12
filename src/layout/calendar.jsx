@@ -1,6 +1,5 @@
-import Timeline from 'react-calendar-timeline';
 import moment from 'moment';
-import 'react-calendar-timeline/lib/Timeline.css';
+
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import MaterialCalendar from '../component/outCalendar';
@@ -8,18 +7,18 @@ import MaterialCalendar from '../component/outCalendar';
 const fetchUrl = 'https://developer-lostark.game.onstove.com';
 
 const WeekCalendar = ({ Collectibles }) => {
-  //console.log(Collectibles);
   const [group, setGroup] = useState([]);
   const [dailyEvent, setdailyEvent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notHave, setNotHave] = useState([]);
   useEffect(() => {
-    const notHave = Collectibles.map((x) =>
+    console.log(Collectibles);
+    const notHaveArr = Collectibles.map((x) =>
       x.CollectiblePoints.filter((x) => x.Point !== 1)
     );
-    console.log(notHave);
 
-    setNotHave(notHave.flat().map((x) => x.PointName.replaceAll(' ', '')));
+    console.log(notHaveArr);
+    setNotHave(notHaveArr.flat());
   }, [Collectibles]);
   useEffect(() => {
     const getData = () => {
@@ -38,6 +37,7 @@ const WeekCalendar = ({ Collectibles }) => {
           ];
 
           const eventArr = [];
+
           res.data.map((x) => {
             if (
               resourceArr[0].instances.find(
@@ -49,78 +49,67 @@ const WeekCalendar = ({ Collectibles }) => {
                 text: x.CategoryName,
               });
             }
-            if (
-              resourceArr[1].instances.find(
-                (z) => z.RewardItems === x.RewardItems
-              ) === undefined &&
-              x.CategoryName !== '카오스게이트' &&
-              x.CategoryName !== '필드보스'
-            ) {
-              x.RewardItems.map((z, i) => {
-                return resourceArr[1].instances.push({
-                  title: z.Name,
-                  text: z.Name,
-                  id: `${x.ContentsName.replaceAll(' ', '')}${z.Name.replaceAll(
-                    ' ',
-                    ''
-                  )}`,
-                  color: z.Icon,
-                });
+
+            x.RewardItems.map((z, i) => {
+              return resourceArr[1].instances.push({
+                title: z.Name,
+                text: z.Name,
+                id: z.Name,
+                color: z.Icon,
               });
-            }
+            });
+            resourceArr[1].instances = resourceArr[1].instances.filter(
+              (item1, idx1) => {
+                return (
+                  resourceArr[1].instances.findIndex((item2, idx2) => {
+                    return item1.id == item2.id;
+                  }) == idx1
+                );
+              }
+            );
+
             return x.StartTimes.map((z) => {
               if (
                 x.CategoryName !== '카오스게이트' &&
                 x.CategoryName !== '필드보스'
               ) {
-                eventId++;
                 const eventObject = {
                   id: eventId,
                   title: x.ContentsName,
                   startDate: moment(z),
                   location: x.CategoryName,
                   icon: x.ContentsIcon,
-                  rewards: x.RewardItems.map((y, i) => {
-                    return `${x.ContentsName.replaceAll(
-                      ' ',
-                      ''
-                    )}${y.Name.replaceAll(' ', '')}`;
-                  }),
+                  rewards: x.RewardItems.map((y, i) => y.Name),
                 };
-                eventArr.push(eventObject);
+
+                eventObject.rewards.some((y) =>
+                  notHave.some((el2) => el2.PointName.includes(y))
+                )
+                  ? (eventArr.push(eventObject), eventId++)
+                  : null;
               }
             });
           });
-          console.log(eventArr);
 
-          const filterd = eventArr.filter(
-            (z) =>
-              z.rewards.filter(
-                (y) => notHave.filter((v) => y.includes(v)).length > 0
-              ).length > 0
-          );
+          const set = new Set(resourceArr);
 
-          filterd.map((el, idx) => {
-            el, (el.id = idx + 1);
-          });
-
-          setGroup(resourceArr);
-          setdailyEvent(filterd);
+          setGroup([...set]);
+          setdailyEvent(eventArr);
           setLoading(false);
         });
     };
     getData();
   }, [notHave]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  } else {
-    return (
-      <div>
+  console.log(dailyEvent.length);
+  return (
+    <div>
+      {loading && dailyEvent.length == 0 ? (
+        <div>Loading...</div>
+      ) : (
         <MaterialCalendar data={dailyEvent} resource={group} />
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 };
 
 export default WeekCalendar;

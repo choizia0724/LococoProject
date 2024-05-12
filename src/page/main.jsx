@@ -6,7 +6,7 @@ import WeekCalendar from '../layout/calendar';
 import MyCharacter from '../layout/character';
 import Collect from '../layout/collect';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function Main() {
@@ -15,6 +15,7 @@ function Main() {
   const [Collectibles, setCollectibles] = useState([]);
   const [ArmoryProfile, setArmoryProfile] = useState({});
   const fetchUrl = 'https://developer-lostark.game.onstove.com';
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get(`${fetchUrl}/armories/characters/${param.char}`, {
@@ -23,7 +24,13 @@ function Main() {
         },
       })
       .then((x) => {
-        if (x.data.ArmoryAvatars !== null) setIsRealChar(true);
+        console.log(x);
+        if (x.data !== null) {
+          setIsRealChar(true);
+        } else {
+          navigate('/', { state: 'notReal' });
+          return;
+        }
         setArmoryProfile(x.data.ArmoryProfile);
         const arr = [];
         x.data.Collectibles.forEach((element) => {
@@ -38,11 +45,10 @@ function Main() {
         setCollectibles(arr);
       });
   }, [param]);
-  useEffect(() => {}, [isRealChar]);
 
   return (
     <>
-      <Header />
+      {isRealChar ? <Header name={param.char} /> : null}
       <Container>
         <Row>
           <Col lg={7}>
@@ -53,7 +59,11 @@ function Main() {
           </Col>
         </Row>
         <Row>
-          <WeekCalendar Collectibles={Collectibles} />
+          {isRealChar ? (
+            <WeekCalendar Collectibles={Collectibles} />
+          ) : (
+            <div>Please Insert Your Character</div>
+          )}
         </Row>
         <Row>
           <Raid />

@@ -12,7 +12,7 @@ const Collect = ({ Collectibles }) => {
   };
 
   return (
-    <Accordion className='py-4' defaultActiveKey={0}>
+    <Accordion className='py-0 py-lg-4' defaultActiveKey={0}>
       {Collectibles.map((x, i) => {
         return (
           <Accordion.Item key={i} eventKey={i}>
