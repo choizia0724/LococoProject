@@ -28,7 +28,7 @@ function Main() {
         if (x.data !== null) {
           setIsRealChar(true);
         } else {
-          navigate('/', { state: 'notReal' });
+          navigate(-1, { state: 'notReal' });
           return;
         }
         setArmoryProfile(x.data.ArmoryProfile);

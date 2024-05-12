@@ -9,7 +9,7 @@ function App() {
     document.documentElement.setAttribute('data-theme', 'dark');
   }, []);
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path='/' element={<Insert />}></Route>
         <Route path='/:char' element={<Main />}></Route>

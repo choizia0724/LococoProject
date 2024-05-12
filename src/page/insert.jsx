@@ -9,7 +9,6 @@ const Insert = ({ size, char }) => {
   const changeValue = (e) => {
     setCharName(e.target.value);
   };
-  console.log(location.state, char);
 
   return (
     <Container>
