@@ -68,27 +68,30 @@ const WeekCalendar = ({ Collectibles }) => {
               }
             );
 
-            return x.StartTimes.map((z) => {
-              if (
-                x.CategoryName !== '카오스게이트' &&
-                x.CategoryName !== '필드보스'
-              ) {
-                const eventObject = {
-                  id: eventId,
-                  title: x.ContentsName,
-                  startDate: moment(z),
-                  location: x.CategoryName,
-                  icon: x.ContentsIcon,
-                  rewards: x.RewardItems.map((y, i) => y.Name),
-                };
+            return (
+              x.StartTimes &&
+              x.StartTimes.map((z) => {
+                if (
+                  x.CategoryName !== '카오스게이트' &&
+                  x.CategoryName !== '필드보스'
+                ) {
+                  const eventObject = {
+                    id: eventId,
+                    title: x.ContentsName,
+                    startDate: moment(z),
+                    location: x.CategoryName,
+                    icon: x.ContentsIcon,
+                    rewards: x.RewardItems.map((y, i) => y.Name),
+                  };
 
-                eventObject.rewards.some((y) =>
-                  notHave.some((el2) => el2.PointName.includes(y))
-                )
-                  ? (eventArr.push(eventObject), eventId++)
-                  : null;
-              }
-            });
+                  eventObject.rewards.some((y) =>
+                    notHave.some((el2) => el2.PointName.includes(y))
+                  )
+                    ? (eventArr.push(eventObject), eventId++)
+                    : null;
+                }
+              })
+            );
           });
 
           const set = new Set(resourceArr);
