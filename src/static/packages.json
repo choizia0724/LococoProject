@@ -282,5 +282,132 @@
         ]
       }
     ]
+  },
+  {
+    "name": "[월간] 올인원 상급 성장 패키지",
+    "cost": 55000,
+    "items": [
+      {
+        "name": "상급 수호 선택 주머니",
+        "amount": 60,
+        "code": 61001020,
+        "img": "shop_icon_6536",
+        "items": [
+          {
+            "name": "수호석 결정 (귀속)",
+            "amount": 50,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_6_104.png",
+            "code": 66102103
+          },
+          {
+            "name": "수호강석 (귀속)",
+            "amount": 10,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_59.png",
+            "code": 66102104
+          }
+        ]
+      },
+      {
+        "name": "상급 파괴 선택 주머니",
+        "amount": 30,
+        "code": 61001021,
+        "img": "shop_icon_6535",
+        "items": [
+          {
+            "name": "파괴석 결정 (귀속)",
+            "amount": 50,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_6_105.png",
+            "code": 66102003
+          },
+          {
+            "name": "파괴강석 (귀속)",
+            "amount": 10,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_58.png",
+            "code": 66102004
+          }
+        ]
+      },
+      {
+        "name": "상급 돌파석 선택 상자",
+        "amount": 10,
+        "code": 61001022,
+        "img": "shop_icon_6539",
+        "items": [
+          {
+            "name": "위대한 명예의 돌파석 (귀속)",
+            "amount": 200,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_7_156.png",
+            "code": 66110222
+          },
+          {
+            "name": "경이로운 명예의 돌파석 (귀속)",
+            "amount": 40,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_7_157.png",
+            "code": 66110223
+          }
+        ]
+      },
+      {
+        "name": "상급 융화 재료 선택 상자",
+        "amount": 2,
+        "img": "shop_icon_6541",
+        "code": 61001023,
+        "items": [
+          {
+            "name": "오레하 융화 재료 (귀속)",
+            "amount": 800,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_71.png",
+            "code": 6861008
+          },
+          {
+            "name": "상급 오레하 융화 재료 (귀속)",
+            "amount": 400,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_109.png",
+            "code": 6861009
+          }
+        ]
+      },
+      {
+        "name": "명예의 파편 주머니(대) (귀속)",
+        "amount": 50,
+        "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_227.png",
+        "code": 66130033,
+        "items": [
+          {
+            "name": "명예의 파편 주머니(대)",
+            "amount": 1,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_227.png",
+            "code": 66130133
+          }
+        ]
+      },
+      {
+        "name": "보조 재료 상자",
+        "amount": 3,
+        "img": "shop_icon_6543",
+        "code": 61001024,
+        "select": "all",
+        "items": [
+          {
+            "name": "태양의 은총 (귀속)",
+            "amount": 130,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_7_161.png",
+            "code": 66111121
+          },
+          {
+            "name": "태양의 축복 (귀속)",
+            "amount": 40,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_7_162.png",
+            "code": 66111122
+          },
+          {
+            "name": "태양의 가호 (귀속)",
+            "amount": 15,
+            "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_7_163.png",
+            "code": 66111123
+          }
+        ]
+      }
+    ]
   }
 ]

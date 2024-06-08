@@ -2,6 +2,11 @@
 * {
   font-family: 'SCoreDream';
 }
+@media (max-width: 860px) {
+  * {
+    font-size: 14px;
+  }
+}
 html,
 body {
   padding: 0;

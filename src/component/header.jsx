@@ -32,7 +32,7 @@ const Header = ({ name = '', isRealChar = false }) => {
               height='30'
               className='d-inline-block align-top'
             />{' '}
-            로코코 프로젝트
+            <span className='d-none d-sm-inline-block'>로코코 프로젝트</span>
           </Navbar.Brand>
           <Nav.Link as={Link} to='/cost'>
             효율표
