@@ -1,31 +1,63 @@
-import { Navbar, Container, Nav, Modal } from 'react-bootstrap';
+import {
+  Navbar,
+  Container,
+  Nav,
+  Form,
+  Button,
+  Image,
+  InputGroup,
+} from 'react-bootstrap';
+import { Search } from 'react-bootstrap-icons';
+import Logo from './../img/logo.png';
 import { useState } from 'react';
-import Insert from '../page/insert';
+import { useNavigate, Link } from 'react-router-dom';
 
-const Header = ({ name }) => {
-  const [smShow, setSmShow] = useState(false);
+const Header = ({ name = '', isRealChar = false }) => {
+  const [charName, setCharName] = useState(name);
+  const navigate = useNavigate();
+
+  const changeValue = (e) => {
+    setCharName(e.target.value);
+  };
+
   return (
     <Navbar className='bg-body-tertiary'>
       <Container>
-        <Nav>
-          <Nav.Item>
-            <Nav.Link onClick={() => setSmShow(true)}>{name}</Nav.Link>
-          </Nav.Item>
+        <Nav className='w-100 justify-content-between'>
+          <Navbar.Brand as={Link} to='/'>
+            <Image
+              alt=''
+              src={Logo}
+              width='30'
+              height='30'
+              className='d-inline-block align-top'
+            />{' '}
+            로코코 프로젝트
+          </Navbar.Brand>
+          <Nav.Link as={Link} to='/cost'>
+            효율표
+          </Nav.Link>
+          <Form className='ms-auto'>
+            <Form.Group controlId='HeaderSearch'>
+              <InputGroup className='d-flex'>
+                <Form.Control
+                  value={charName}
+                  onChange={changeValue}
+                  type='text'
+                  placeholder='캐릭터 이름'
+                />
+                <Button
+                  onClick={() => navigate(`/char/${charName}`)}
+                  variant='primary'
+                  type='submit'
+                >
+                  <Search />
+                </Button>
+              </InputGroup>
+            </Form.Group>
+          </Form>
         </Nav>
       </Container>
-      <Modal
-        size='sm'
-        show={smShow}
-        onHide={() => setSmShow(false)}
-        aria-labelledby='modal-sizes-title-sm'
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id='modal-sizes-title-sm'>캐릭터 검색</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Insert char={name} size={'modal'} />
-        </Modal.Body>
-      </Modal>
     </Navbar>
   );
 };

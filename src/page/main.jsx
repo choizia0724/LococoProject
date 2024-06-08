@@ -48,7 +48,7 @@ function Main() {
 
   return (
     <>
-      {isRealChar ? <Header name={param.char} /> : null}
+      <Header name={param.char} isRealChar={isRealChar} />
       <Container>
         <Row>
           <Col lg={7}>

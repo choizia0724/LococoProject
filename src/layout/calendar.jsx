@@ -12,7 +12,6 @@ const WeekCalendar = ({ Collectibles }) => {
   const [loading, setLoading] = useState(true);
   const [notHave, setNotHave] = useState([]);
   useEffect(() => {
-    console.log(Collectibles);
     const notHaveArr = Collectibles.map((x) =>
       x.CollectiblePoints.filter((x) => x.Point !== 1)
     );
@@ -103,10 +102,9 @@ const WeekCalendar = ({ Collectibles }) => {
     };
     getData();
   }, [notHave]);
-  console.log(dailyEvent.length);
   return (
     <div>
-      {loading && dailyEvent.length == 0 ? (
+      {loading && dailyEvent.length === 0 ? (
         <div>Loading...</div>
       ) : (
         <MaterialCalendar data={dailyEvent} resource={group} />

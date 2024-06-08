@@ -22,7 +22,10 @@ const Content = ({
   appointmentResources,
   ...restProps
 }) => (
-  <Container className='py-3'>
+  <Container
+    className='py-3 overflow-y-scroll'
+    style={{ 'max-height': '400px' }}
+  >
     <Row className='align-items-end'>
       <Col xs={3}>
         <Row>
@@ -71,8 +74,6 @@ const Content = ({
 );
 
 const MaterialCalendar = ({ data, resource }) => {
-  const [schedulerData, setSchedulerData] = useState(data);
-
   return (
     <Paper>
       <Scheduler data={data} height={500} firstDayOfWeek={3}>
