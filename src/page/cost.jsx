@@ -53,12 +53,19 @@ const fetchItemData = async (code) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching item data:', error);
-    return null;
+    return console.log(error);
   }
 };
 
-const ItemDetail = ({ idx, item, itemData, totalGold, setTotalGold }) => {
+const ItemDetail = ({
+  idx,
+  item,
+  itemData,
+  totalGold,
+  setTotalGold,
+  itemindex,
+}) => {
+  console.log(itemData);
   const onCheckMethod = (x, i) => {
     const arr = [...totalGold];
     arr[idx] = Math.round(
@@ -82,11 +89,14 @@ const ItemDetail = ({ idx, item, itemData, totalGold, setTotalGold }) => {
         >
           <Form.Check.Input
             name={item.code}
-            id={`${item.code}_${x.code}`}
+            id={`${itemindex}_${item.code}_${x.code}`}
             type={item.select && item.select === 'all' ? 'checkbox' : 'radio'}
             onChange={() => onCheckMethod(x, i)}
           />
-          <Form.Check.Label htmlFor={`${item.code}_${x.code}`} className='mb-2'>
+          <Form.Check.Label
+            htmlFor={`${itemindex}_${item.code}_${x.code}`}
+            className='mb-2'
+          >
             <div>
               <div className='ms-3 align-items-center d-flex'>
                 <Image src={x.img} className='mx-1' style={{ width: '24px' }} />
@@ -107,6 +117,7 @@ const ItemDetail = ({ idx, item, itemData, totalGold, setTotalGold }) => {
               <div className='ms-3'>
                 <Image src={money} className='mx-1' style={{ width: '24px' }} />
                 최종 비용:
+                {console.log(itemData[i])}
                 {Math.round(
                   itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount
                 )}
@@ -127,30 +138,31 @@ const ItemRow = ({
   setTotalGold,
   totalGold,
   crystalVal,
+  itemArray,
+  itemindex,
 }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      const fetchData = await Promise.all(
-        item.items.map(async (x) => {
-          if (x.name === '크리스탈') {
-            return [
-              {
-                Name: '크리스탈',
-                Stats: [{ AvgPrice: Math.round((crystalVal * 1) / 95) }],
-              },
-            ];
-          } else {
-            const data = await fetchItemData(x.code);
-            return data;
-          }
-        })
-      );
-      setData(fetchData);
+    const loadData = () => {
+      const parsedData = item.items.map((x) => {
+        if (x.name === '크리스탈') {
+          return [
+            {
+              Name: '크리스탈',
+              Stats: [{ AvgPrice: Math.round((crystalVal * 1) / 95) }],
+            },
+          ];
+        } else {
+          const data = itemArray.find((z) => z.code === x.code);
+          return data.data;
+        }
+      });
+
+      setData(parsedData);
     };
     loadData();
-  }, [item, crystalVal]);
+  }, [itemArray, crystalVal, item]);
 
   return (
     <>
@@ -168,6 +180,7 @@ const ItemRow = ({
             'Loading...'
           ) : (
             <ItemDetail
+              itemindex={itemindex}
               idx={idx}
               item={item}
               itemData={data}
@@ -182,7 +195,7 @@ const ItemRow = ({
   );
 };
 
-const RenderData = (x, gold, crystalVal) => {
+const RenderData = (x, gold, crystalVal, itemArray, itemindex) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isVisiblePopOver, setIsVisiblePopOver] = useState(false);
   const [totalGold, setTotalGold] = useState(Array(x.items.length).fill(0));
@@ -251,10 +264,12 @@ const RenderData = (x, gold, crystalVal) => {
         {isVisible &&
           x.items.map((item, i2) => (
             <ItemRow
+              itemindex={itemindex}
               gold={gold}
               crystalVal={crystalVal}
               key={i2}
               idx={i2}
+              itemArray={itemArray}
               item={item}
               setTotalGold={setTotalGold}
               totalGold={totalGold}
@@ -268,12 +283,50 @@ const RenderData = (x, gold, crystalVal) => {
 const Cost = () => {
   const [gold, setGold] = useState(50);
   const [crystalVal, setCrysralVal] = useState(3600);
+  const [itemArray, setItemArray] = useState([]);
   const onChangeMethod = (e, fun) => {
     if (e.target.value < 0) {
       fun(1);
     }
     fun(e.target.value);
   };
+  useEffect(() => {
+    const fetchAllItemsData = async () => {
+      const promises = packages.itemscode.map(async (x) => {
+        const data = await fetchItemData(x);
+        return { code: x, data: data };
+      });
+      const arr = await Promise.all(promises);
+      return arr;
+    };
+    const savedArr = localStorage.getItem('itemArr');
+    if (savedArr) {
+      const { data, timestamp } = JSON.parse(savedArr);
+      const now = new Date().getTime();
+
+      if (now - timestamp < 3600000) {
+        setItemArray(data);
+      } else {
+        localStorage.removeItem('itemArr');
+        fetchAllItemsData().then((fetchedArr) => {
+          setItemArray(fetchedArr);
+          localStorage.setItem(
+            'itemArr',
+            JSON.stringify({ data: fetchedArr, timestamp })
+          );
+        });
+      }
+    } else {
+      fetchAllItemsData().then((fetchedArr) => {
+        setItemArray(fetchedArr);
+        const timestamp = new Date().getTime();
+        localStorage.setItem(
+          'itemArr',
+          JSON.stringify({ data: fetchedArr, timestamp })
+        );
+      });
+    }
+  }, []);
   return (
     <>
       <Header />
@@ -314,9 +367,9 @@ const Cost = () => {
             </InputGroup>
           </Col>
           <Col lg={6}>
-            {packages.map((x, i) => (
+            {packages.packages.map((x, i) => (
               <Col xl={12} key={i} className='mb-3'>
-                {RenderData(x, gold, crystalVal)}
+                {RenderData(x, gold, crystalVal, itemArray, i)}
               </Col>
             ))}
           </Col>
