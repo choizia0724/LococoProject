@@ -65,7 +65,6 @@ const ItemDetail = ({
   setTotalGold,
   itemindex,
 }) => {
-  console.log(itemData);
   const onCheckMethod = (x, i) => {
     const arr = [...totalGold];
     arr[idx] = Math.round(
@@ -117,7 +116,6 @@ const ItemDetail = ({
               <div className='ms-3'>
                 <Image src={money} className='mx-1' style={{ width: '24px' }} />
                 최종 비용:
-                {console.log(itemData[i])}
                 {Math.round(
                   itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount
                 )}
