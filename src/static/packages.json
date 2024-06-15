@@ -408,45 +408,7 @@
               "code": 66111123
             }
           ]
-        },
-         {
-      "name": "[월간] 1,200 크리스탈 패키지",
-      "cost": 33000,
-      "items": [
-        {
-          "name": "크리스탈",
-          "amount": 1200,
-          "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_209.png",
-          "code": 40100011,
-          "items": [
-            {
-              "name": "크리스탈",
-              "amount": 1,
-              "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_209.png",
-              "code": 40100011
-            }
-          ]
-        },
-        {
-          "name": "에브니 큐브 입장권 선택상자",
-          "amount": 15,
-          "code": 61000952,
-          "img": "shop_icon_6540",
-          "items": [
-            {
-              "name": "경이로운 명예의 돌파석 (귀속)",
-              "amount": 100,
-              "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_7_157.png",
-              "code": 66110223
-            },
-            {
-              "name": "찬란한 명예의 돌파석 (귀속)",
-              "amount": 20,
-              "img": "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_11_17.png",
-              "code": 66110224
-            }
-          ]
-        },
+        }
       ]
     },
     {
