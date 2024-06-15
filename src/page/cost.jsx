@@ -15,32 +15,10 @@ import Header from '../component/header';
 import packages from './../static/packages.json';
 import loyal_crystal from './../img/royal_crystal.png';
 
-import shop_icon_6535 from './../img/shop_icon_6535.webp';
-import shop_icon_6536 from './../img/shop_icon_6536.webp';
-import shop_icon_6539 from './../img/shop_icon_6539.webp';
-import shop_icon_6540 from './../img/shop_icon_6540.webp';
-import shop_icon_6541 from './../img/shop_icon_6541.webp';
-import shop_icon_6542 from './../img/shop_icon_6542.webp';
-import shop_icon_6543 from './../img/shop_icon_6543.webp';
-import shop_icon_6544 from './../img/shop_icon_6544.webp';
-import shop_icon_6545 from './../img/shop_icon_6545.webp';
-
 import axios from 'axios';
 import money from './../img/money.png';
 import crystal from './../img/crystal.png';
 import { QuestionLg, QuestionOctagonFill } from 'react-bootstrap-icons';
-
-const images = {
-  shop_icon_6540,
-  shop_icon_6541,
-  shop_icon_6542,
-  shop_icon_6543,
-  shop_icon_6544,
-  shop_icon_6545,
-  shop_icon_6536,
-  shop_icon_6539,
-  shop_icon_6535,
-};
 
 const fetchUrl = 'https://developer-lostark.game.onstove.com';
 
@@ -56,7 +34,61 @@ const fetchItemData = async (code) => {
     return console.log(error);
   }
 };
-
+const FormCheckComponent = ({
+  item,
+  itemindex,
+  x,
+  i,
+  itemData,
+  onCheckMethod,
+  children,
+}) => {
+  return (
+    <Form.Check
+      type={item.select && item.select === true ? 'checkbox' : 'radio'}
+      key={i}
+    >
+      <Form.Check.Input
+        name={item.code}
+        id={`${itemindex}_${item.code}_${x.code}`}
+        type={item.select && item.select === true ? 'checkbox' : 'radio'}
+        onChange={() => onCheckMethod(x, i)}
+      />
+      <Form.Check.Label
+        htmlFor={`${itemindex}_${item.code}_${x.code}`}
+        className='mb-2'
+      >
+        {children ? (
+          children
+        ) : (
+          <div>
+            <div className='ms-3 align-items-center d-flex'>
+              <Image src={x.img} className='mx-1' style={{ width: '24px' }} />
+              <span>{itemData[i][0]?.Name}</span>
+              <Image src={money} className='mx-1' style={{ width: '24px' }} />
+              <span>{itemData[i][0]?.Stats[0]?.AvgPrice}</span>
+              <span>x</span>
+              <span>{x.amount}</span>
+              <span>=</span>
+              <span>
+                {itemData[i][0]?.Stats[0]
+                  ? Math.round(itemData[i][0].Stats[0].AvgPrice * x.amount)
+                  : 'Loading...'}
+              </span>
+            </div>
+            <div className='ms-3'>
+              <Image src={money} className='mx-1' style={{ width: '24px' }} />
+              최종 비용:
+              {Math.round(
+                itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount
+              )}
+            </div>
+          </div>
+        )}
+      </Form.Check.Label>
+    </Form.Check>
+  );
+};
 const ItemDetail = ({
   idx,
   item,
@@ -67,9 +99,26 @@ const ItemDetail = ({
 }) => {
   const onCheckMethod = (x, i) => {
     const arr = [...totalGold];
-    arr[idx] = Math.round(
-      itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount
-    );
+
+    console.log(arr[idx]);
+    console.log(item.amount);
+    console.log(itemData);
+    console.log(x);
+    console.log(i);
+    if (item.nested) {
+      console.log(itemData[i]);
+      arr[idx] = itemData[i].map((z, j) => {
+        return Math.round(
+          z.data[0].Stats[0].AvgPrice * x.items[j].amount * item.amount
+        );
+      });
+    } else if (item.select) {
+      arr[idx][i] = itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount;
+    } else {
+      arr[idx] = Math.round(
+        itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount
+      );
+    }
     setTotalGold(arr);
   };
 
@@ -81,49 +130,96 @@ const ItemDetail = ({
 
   return (
     <Form>
-      {item.items.map((x, i) => (
-        <Form.Check
-          type={item.select && item.select === 'all' ? 'checkbox' : 'radio'}
-          key={i}
-        >
-          <Form.Check.Input
-            name={item.code}
-            id={`${itemindex}_${item.code}_${x.code}`}
-            type={item.select && item.select === 'all' ? 'checkbox' : 'radio'}
-            onChange={() => onCheckMethod(x, i)}
-          />
-          <Form.Check.Label
-            htmlFor={`${itemindex}_${item.code}_${x.code}`}
-            className='mb-2'
-          >
-            <div>
-              <div className='ms-3 align-items-center d-flex'>
-                <Image src={x.img} className='mx-1' style={{ width: '24px' }} />
-                <span>{itemData[i][0]?.Name}</span>
-              </div>
-              <div className='ms-3 align-items-center d-flex'>
-                <Image src={money} className='mx-1' style={{ width: '24px' }} />
-                <span>{itemData[i][0]?.Stats[0]?.AvgPrice}</span>
-                <span>x</span>
-                <span>{x.amount}</span>
-                <span>=</span>
-                <span>
-                  {itemData[i][0]?.Stats[0]
-                    ? Math.round(itemData[i][0].Stats[0].AvgPrice * x.amount)
+      {item.items.map((x, i) => {
+        if (item.nested && item.nested === true) {
+          return (
+            <FormCheckComponent
+              key={i}
+              item={item}
+              itemData={itemData}
+              itemindex={itemindex}
+              x={x}
+              onCheckMethod={onCheckMethod}
+              i={i}
+            >
+              <div>
+                <div className='ms-3 flex-column d-flex'>
+                  <div>
+                    <Image
+                      src={x.img}
+                      className='mx-1'
+                      style={{ width: '24px' }}
+                    />
+                    <span>{x.name}</span>
+                  </div>
+                  <div className='d-flex flex-column'>
+                    {itemData[i].map((ele, index) => {
+                      return (
+                        <div className='d-flex' key={index}>
+                          <Image
+                            src={x.items[index].img}
+                            className='mx-1'
+                            style={{ width: '24px' }}
+                          />
+                          <div>
+                            <span>{ele.data[0].Name}</span>
+                            <Image
+                              src={money}
+                              className='mx-1'
+                              style={{ width: '24px' }}
+                            />
+                            <span>{ele.data[0].Stats[0]?.AvgPrice}</span>
+                            <span>x</span>
+                            <span>{x.items[index].amount}</span>
+                            <span>=</span>
+                            <span>
+                              {ele.data[0]?.Stats[0]
+                                ? Math.round(
+                                    ele.data[0].Stats[0].AvgPrice *
+                                      x.items[index].amount
+                                  )
+                                : 'Loading...'}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className='ms-3'>
+                  <Image
+                    src={money}
+                    className='mx-1'
+                    style={{ width: '24px' }}
+                  />
+                  최종 비용:
+                  {itemData[i][0]?.data[0].Stats[0]
+                    ? Math.round(
+                        itemData[i][0].data[0].Stats[0].AvgPrice *
+                          x.items.reduce(
+                            (sum, currentItem) => sum + currentItem.amount,
+                            0
+                          ) *
+                          item.amount
+                      )
                     : 'Loading...'}
-                </span>
+                </div>
               </div>
-              <div className='ms-3'>
-                <Image src={money} className='mx-1' style={{ width: '24px' }} />
-                최종 비용:
-                {Math.round(
-                  itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount
-                )}
-              </div>
-            </div>
-          </Form.Check.Label>
-        </Form.Check>
-      ))}
+            </FormCheckComponent>
+          );
+        }
+        return (
+          <FormCheckComponent
+            key={i}
+            item={item}
+            itemData={itemData}
+            itemindex={itemindex}
+            x={x}
+            onCheckMethod={onCheckMethod}
+            i={i}
+          />
+        );
+      })}
     </Form>
   );
 };
@@ -144,16 +240,33 @@ const ItemRow = ({
   useEffect(() => {
     const loadData = () => {
       const parsedData = item.items.map((x) => {
-        if (x.name === '크리스탈') {
-          return [
-            {
-              Name: '크리스탈',
-              Stats: [{ AvgPrice: Math.round((crystalVal * 1) / 95) }],
-            },
-          ];
+        if (item.nested && item.nested === true) {
+          return x.items.map((z) => {
+            if (z.code === 65021010) {
+              return {
+                code: z.code,
+                data: [
+                  {
+                    Name: '1레벨 보석',
+                    Stats: [{ AvgPrice: 15 }],
+                  },
+                ],
+              };
+            }
+            return itemArray.find((x) => z.code === x.code);
+          });
         } else {
-          const data = itemArray.find((z) => z.code === x.code);
-          return data.data;
+          if (x.code === 40100011) {
+            return [
+              {
+                Name: '크리스탈',
+                Stats: [{ AvgPrice: Math.round((crystalVal * 1) / 95) }],
+              },
+            ];
+          } else {
+            const data = itemArray.find((z) => z.code === x.code);
+            return data.data;
+          }
         }
       });
 
@@ -171,7 +284,7 @@ const ItemRow = ({
       </Row>
       <Row key={index}>
         <Col xs='auto'>
-          <Image src={images[item.img] || item.img} style={{ width: '64px' }} />
+          <Image src={item.img} style={{ width: '64px' }} />
         </Col>
         <Col>
           {data.length === 0 ? (
@@ -192,13 +305,20 @@ const ItemRow = ({
     </>
   );
 };
-
+const initializeTotalGold = (items) => {
+  return items.map((item) =>
+    item.nested || item.select ? Array(item.items.length).fill(0) : 0
+  );
+};
 const RenderData = (x, gold, crystalVal, itemArray, itemindex) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isVisiblePopOver, setIsVisiblePopOver] = useState(false);
-  const [totalGold, setTotalGold] = useState(Array(x.items.length).fill(0));
+  const [totalGold, setTotalGold] = useState(() =>
+    initializeTotalGold(x.items)
+  );
   const [reduceGold, setReduceGold] = useState(0);
   useEffect(() => {
+    console.log(totalGold);
     setReduceGold(totalGold.flat().reduce((a, b) => a + b, 0));
   }, [gold, totalGold]);
   const onClickMethod = () => {
