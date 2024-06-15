@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Image,
@@ -10,6 +10,8 @@ import {
   Tooltip,
   Button,
   OverlayTrigger,
+  ButtonGroup,
+  ToggleButton,
 } from 'react-bootstrap';
 import Header from '../component/header';
 import packages from './../static/packages.json';
@@ -18,7 +20,7 @@ import loyal_crystal from './../img/royal_crystal.png';
 import axios from 'axios';
 import money from './../img/money.png';
 import crystal from './../img/crystal.png';
-import { QuestionLg, QuestionOctagonFill } from 'react-bootstrap-icons';
+import { QuestionLg } from 'react-bootstrap-icons';
 
 const fetchUrl = 'https://developer-lostark.game.onstove.com';
 
@@ -43,16 +45,18 @@ const FormCheckComponent = ({
   onCheckMethod,
   children,
 }) => {
+  const handleChange = (event) => {
+    const isChecked = event.target.checked;
+    onCheckMethod(x, i, isChecked);
+  };
   return (
-    <Form.Check
-      type={item.select && item.select === true ? 'checkbox' : 'radio'}
-      key={i}
-    >
+    <Form.Check type={item?.select === true ? 'checkbox' : 'radio'} key={i}>
       <Form.Check.Input
         name={item.code}
         id={`${itemindex}_${item.code}_${x.code}`}
-        type={item.select && item.select === true ? 'checkbox' : 'radio'}
-        onChange={() => onCheckMethod(x, i)}
+        type={item?.select === true ? 'checkbox' : 'radio'}
+        defaultChecked={item?.select ? true : i === 0 ? true : false}
+        onChange={handleChange}
       />
       <Form.Check.Label
         htmlFor={`${itemindex}_${item.code}_${x.code}`}
@@ -89,42 +93,40 @@ const FormCheckComponent = ({
     </Form.Check>
   );
 };
-const ItemDetail = ({
-  idx,
-  item,
-  itemData,
-  totalGold,
-  setTotalGold,
-  itemindex,
-}) => {
-  const onCheckMethod = (x, i) => {
-    const arr = [...totalGold];
-
-    console.log(arr[idx]);
-    console.log(item.amount);
-    console.log(itemData);
-    console.log(x);
-    console.log(i);
-    if (item.nested) {
-      console.log(itemData[i]);
-      arr[idx] = itemData[i].map((z, j) => {
-        return Math.round(
-          z.data[0].Stats[0].AvgPrice * x.items[j].amount * item.amount
+const ItemDetail = ({ idx, item, itemData, setTotalGold, itemindex }) => {
+  const onCheckMethod = (x, i, ischecked) => {
+    setTotalGold((prevTotalGold) => {
+      const updatedTotalGold = [...prevTotalGold];
+      if (item.nested) {
+        updatedTotalGold[idx] = itemData[i].map((z, j) => {
+          return Math.round(
+            z.data[0].Stats[0].AvgPrice * x.items[j].amount * item.amount
+          );
+        });
+      } else if (item.select) {
+        updatedTotalGold[idx] = [...updatedTotalGold[idx]];
+        updatedTotalGold[idx][i] =
+          itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount;
+        if (ischecked !== undefined && ischecked == false) {
+          updatedTotalGold[idx][i] = 0;
+        }
+      } else {
+        updatedTotalGold[idx] = Math.round(
+          itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount
         );
-      });
-    } else if (item.select) {
-      arr[idx][i] = itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount;
-    } else {
-      arr[idx] = Math.round(
-        itemData[i][0].Stats[0].AvgPrice * x.amount * item.amount
-      );
-    }
-    setTotalGold(arr);
+      }
+
+      return updatedTotalGold;
+    });
   };
 
   useEffect(() => {
     if (item.items.length > 0) {
-      onCheckMethod(item.items[0], 0);
+      if (item.select) {
+        item.items.map((x, i) => onCheckMethod(x, i, true));
+      } else {
+        onCheckMethod(item.items[0], 0, true);
+      }
     }
   }, []);
 
@@ -310,7 +312,7 @@ const initializeTotalGold = (items) => {
     item.nested || item.select ? Array(item.items.length).fill(0) : 0
   );
 };
-const RenderData = (x, gold, crystalVal, itemArray, itemindex) => {
+const RenderData = (x, gold, crystalVal, itemArray, itemindex, sellCrystal) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isVisiblePopOver, setIsVisiblePopOver] = useState(false);
   const [totalGold, setTotalGold] = useState(() =>
@@ -318,7 +320,6 @@ const RenderData = (x, gold, crystalVal, itemArray, itemindex) => {
   );
   const [reduceGold, setReduceGold] = useState(0);
   useEffect(() => {
-    console.log(totalGold);
     setReduceGold(totalGold.flat().reduce((a, b) => a + b, 0));
   }, [gold, totalGold]);
   const onClickMethod = () => {
@@ -353,6 +354,15 @@ const RenderData = (x, gold, crystalVal, itemArray, itemindex) => {
                     <Image src={money} style={{ width: '24px' }} />
                     <span className='small'>
                       {gold > 0 ? ((100 / gold) * x.cost * 0.95).toFixed(0) : 0}
+                    </span>
+                  </div>
+                  <div className='small'>화폐거래소 크리스탈 판매 시,</div>
+                  <div className='mb-2'>
+                    <Image src={money} style={{ width: '24px' }} />
+                    <span className='small'>
+                      {sellCrystal > 0
+                        ? ((sellCrystal * x.cost) / 2750).toFixed(0)
+                        : 0}
                     </span>
                   </div>
                 </Tooltip>
@@ -400,9 +410,11 @@ const RenderData = (x, gold, crystalVal, itemArray, itemindex) => {
 
 const Cost = () => {
   const [gold, setGold] = useState(50);
-  const [crystalVal, setCrysralVal] = useState(3600);
+  const [crystalVal, setCrysralVal] = useState(3000);
+  const [sellCrystal, setSellCrystal] = useState(3000);
   const [itemArray, setItemArray] = useState([]);
-  const onChangeMethod = (e, fun) => {
+  const [radioValue, setRadioValue] = useState('1');
+  const onChangeMethod = (e, fun, radioValue) => {
     if (e.target.value < 0) {
       fun(1);
     }
@@ -445,29 +457,55 @@ const Cost = () => {
       });
     }
   }, []);
+  const radios = [
+    { name: '서버 내 골드 비율', value: '1' },
+    { name: '화폐거래소 크리스탈 판매', value: '2' },
+  ];
   return (
     <>
       <Header />
       <Container className='py-4'>
         <Row className='justify-content-center'>
-          <Col lg={3}>
-            <Form.Label>서버 내 골드 비율</Form.Label>
+          <Col lg={4}>
+            <Form.Label className='d-block'>골드 구매</Form.Label>
+            <ButtonGroup className='mb-2'>
+              {radios.map((radio, idx) => (
+                <ToggleButton
+                  style={{ wordBreak: 'keep-all' }}
+                  className='fs-6'
+                  key={idx}
+                  id={`radio-${idx}`}
+                  type='radio'
+                  variant={'outline-primary'}
+                  name='radio'
+                  value={radio.value}
+                  checked={radioValue === radio.value}
+                  onChange={(e) => setRadioValue(e.currentTarget.value)}
+                >
+                  {radio.name}
+                </ToggleButton>
+              ))}
+            </ButtonGroup>{' '}
             <InputGroup className='mb-3'>
               <InputGroup.Text>
                 100{' '}
                 <Image
-                  src={money}
+                  src={radioValue === '1' ? money : crystal}
                   style={{ width: '24px', paddingLeft: '5px' }}
                 />
               </InputGroup.Text>
               <Form.Control
                 aria-label='GOLD'
                 type='number'
-                value={gold}
-                onChange={(e) => onChangeMethod(e, setGold)}
-              />
+                value={radioValue === '1' ? gold : sellCrystal}
+                onChange={(e) =>
+                  radioValue === '1'
+                    ? onChangeMethod(e, setGold)
+                    : onChangeMethod(e, setSellCrystal)
+                }
+              />{' '}
             </InputGroup>
-            <Form.Label>화폐거래소 크리스탈 거래</Form.Label>
+            <Form.Label>화폐거래소 크리스탈 구매</Form.Label>
             <InputGroup className='mb-3'>
               <InputGroup.Text>
                 100{' '}
@@ -487,7 +525,7 @@ const Cost = () => {
           <Col lg={6}>
             {packages.packages.map((x, i) => (
               <Col xl={12} key={i} className='mb-3'>
-                {RenderData(x, gold, crystalVal, itemArray, i)}
+                {RenderData(x, gold, crystalVal, itemArray, i, sellCrystal)}
               </Col>
             ))}
           </Col>
