@@ -338,7 +338,7 @@ const RenderData = (x, gold, crystalVal, itemArray, itemindex, sellCrystal) => {
               {x.name}
             </Button>
           </Card.Title>
-          <Card.Text className=''>
+          <Card.Text>
             <OverlayTrigger
               show={isVisiblePopOver}
               placement='bottom'
