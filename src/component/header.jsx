@@ -34,8 +34,11 @@ const Header = ({ name = '', isRealChar = false }) => {
             />{' '}
             <span className='d-none d-sm-inline-block'>로코코 프로젝트</span>
           </Navbar.Brand>
-          <Nav.Link as={Link} to='/cost'>
-            효율표
+          <Nav.Link as={Link} to='/packageCost'>
+            패키지 효율
+          </Nav.Link>
+          <Nav.Link as={Link} to='/stuffCost'>
+            재료 효율
           </Nav.Link>
           <Form className='ms-auto'>
             <Form.Group controlId='HeaderSearch'>
