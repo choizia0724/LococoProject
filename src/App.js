@@ -4,7 +4,6 @@ import Insert from './page/insert';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import Cost from './page/cost';
-import Stuff from './page/itemCost';
 
 function App() {
   useEffect(() => {
@@ -15,8 +14,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Insert />}></Route>
         <Route path='/char/:char' element={<Main />}></Route>
-        <Route path='/packageCost' element={<Cost />}></Route>
-        <Route path='/stuffCost' element={<Stuff />}></Route>
+        <Route path='/cost/packages' element={<PackagesCost />} />
+        <Route path='/cost/stuff' element={<StuffCost />}></Route>
       </Routes>
     </BrowserRouter>
   );
