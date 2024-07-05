@@ -43,6 +43,9 @@ function Main() {
           }
         });
         setCollectibles(arr);
+      })
+      .error((e) => {
+        navigate('/', { state: 'noAuth' });
       });
   }, [param]);
 

@@ -14,7 +14,7 @@ import {
   ToggleButton,
 } from 'react-bootstrap';
 import Header from '../component/header';
-import packages from './../static/packages.json';
+import packages from '../static/packages.json';
 import loyal_crystal from './../img/royal_crystal.png';
 
 import axios from 'axios';
@@ -408,7 +408,7 @@ const RenderData = (x, gold, crystalVal, itemArray, itemindex, sellCrystal) => {
   );
 };
 
-const Cost = () => {
+const PackagesCost = () => {
   const [gold, setGold] = useState(50);
   const [crystalVal, setCrysralVal] = useState(3000);
   const [sellCrystal, setSellCrystal] = useState(3000);
@@ -535,4 +535,4 @@ const Cost = () => {
   );
 };
 
-export default Cost;
+export default PackagesCost;

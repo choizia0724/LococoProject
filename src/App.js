@@ -3,7 +3,8 @@ import Main from './page/main';
 import Insert from './page/insert';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
-import Cost from './page/cost';
+import PackagesCost from './page/packagesCost';
+import StuffCost from './page/stuffCost';
 
 function App() {
   useEffect(() => {
@@ -14,7 +15,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Insert />}></Route>
         <Route path='/char/:char' element={<Main />}></Route>
-        <Route path='/cost' element={<Cost />}></Route>
+        <Route path='/cost/packages' element={<PackagesCost />} />
+        <Route path='/cost/stuff' element={<StuffCost />}></Route>
       </Routes>
     </BrowserRouter>
   );
