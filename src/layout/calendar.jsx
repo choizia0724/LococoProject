@@ -24,7 +24,7 @@ const WeekCalendar = ({ Collectibles }) => {
       axios
         .get(`${fetchUrl}/gamecontents/calendar`, {
           headers: {
-            Authorization: `bearer ${process.env.REACT_APP_LOST_ARK_KEY}`,
+            Authorization: `bearer ${localStorage.getItem('apiKey')}`,
           },
         })
         .then((res) => {

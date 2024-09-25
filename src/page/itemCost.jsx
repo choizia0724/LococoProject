@@ -3,7 +3,6 @@ import Header from '../component/header';
 const ItemCost = () => {
   return (
     <>
-      <Header name={''} isRealChar={false} />
       <Container>
         <Row></Row>
       </Container>

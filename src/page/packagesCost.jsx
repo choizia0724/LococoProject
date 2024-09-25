@@ -28,7 +28,7 @@ const fetchItemData = async (code) => {
   try {
     const response = await axios.get(`${fetchUrl}/markets/items/${code}`, {
       headers: {
-        Authorization: `bearer ${process.env.REACT_APP_LOST_ARK_KEY}`,
+        Authorization: `bearer ${localStorage.getItem('apiKey')}`,
       },
     });
     return response.data;
@@ -463,7 +463,6 @@ const PackagesCost = () => {
   ];
   return (
     <>
-      <Header />
       <Container className='py-4'>
         <Row className='justify-content-center'>
           <Col lg={4}>

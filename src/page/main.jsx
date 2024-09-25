@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-function Main() {
+function Main(props) {
   const param = useParams();
   const [isRealChar, setIsRealChar] = useState(false);
   const [Collectibles, setCollectibles] = useState([]);
@@ -18,9 +18,9 @@ function Main() {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`${fetchUrl}/armories/characters/${param.char}`, {
+      .get(`${fetchUrl}/armories/characters/${props.charName}`, {
         headers: {
-          Authorization: `bearer ${process.env.REACT_APP_LOST_ARK_KEY}`,
+          Authorization: `bearer ${localStorage.getItem('apiKey')}`,
         },
       })
       .then((x) => {
@@ -47,11 +47,10 @@ function Main() {
       .error((e) => {
         navigate('/', { state: 'noAuth' });
       });
-  }, [param]);
+  }, [props.charName]);
 
   return (
     <>
-      <Header name={param.char} isRealChar={isRealChar} />
       <Container>
         <Row>
           <Col lg={7}>

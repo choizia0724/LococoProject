@@ -4,17 +4,13 @@ import Header from '../component/header';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Insert = ({ size, char }) => {
+  const navigate = useNavigate();
   const [charName, setCharName] = useState('');
   const [apiKey, setApiKey] = useState('');
-  const navigate = useNavigate();
   const location = useLocation();
-  const changeValue = (e) => {
-    setCharName(e.target.value);
-  };
 
   return (
     <>
-      <Header name={''} isRealChar={false} />
       <Container>
         <Row
           className={
@@ -30,7 +26,7 @@ const Insert = ({ size, char }) => {
                   <>
                     <Form.Label>캐릭터 이름</Form.Label>
                     <Form.Control
-                      onChange={changeValue}
+                      onChange={(e) => setCharName(e.target.value)}
                       type='text'
                       placeholder='캐릭터 이름을 입력하세요'
                     />
@@ -42,7 +38,7 @@ const Insert = ({ size, char }) => {
                   <>
                     <Form.Label>로스트아크 API Key</Form.Label>
                     <Form.Control
-                      onChange={changeValue}
+                      onChange={(e) => setApiKey(e.target.value)}
                       type='text'
                       placeholder='로스트아크 API Key를 입력하세요'
                     />
@@ -53,7 +49,13 @@ const Insert = ({ size, char }) => {
                 )}
               </Form.Group>
               <Button
-                onClick={() => navigate(`/char/${charName}`)}
+                onClick={() => {
+                  if (charName) navigate('char/' + charName);
+                  else {
+                    localStorage.setItem('apiKey', apiKey);
+                    navigate('/');
+                  }
+                }}
                 variant='primary'
                 type='submit'
               >
