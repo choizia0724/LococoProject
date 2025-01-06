@@ -21,7 +21,7 @@ function App() {
         <Route path='/' element={<Insert />}></Route>
         <Route
           path='/char/:char'
-          element={<Main charName={charName} />}
+          element={<Main charName={charName} setCharName={setCharName} />}
         ></Route>
         <Route
           path='/cost/packages'

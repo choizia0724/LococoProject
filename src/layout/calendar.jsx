@@ -25,6 +25,8 @@ const WeekCalendar = ({ Collectibles }) => {
         .get(`${fetchUrl}/gamecontents/calendar`, {
           headers: {
             Authorization: `bearer ${localStorage.getItem('apiKey')}`,
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
           },
         })
         .then((res) => {

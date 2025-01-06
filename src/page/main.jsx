@@ -18,15 +18,24 @@ function Main(props) {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`${fetchUrl}/armories/characters/${props.charName}`, {
-        headers: {
-          Authorization: `bearer ${localStorage.getItem('apiKey')}`,
+      .get(
+        `${fetchUrl}/armories/characters/${param.char}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem('apiKey')}`,
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
         },
-      })
+        {
+          withCredentials: true,
+        }
+      )
       .then((x) => {
         console.log(x);
         if (x.data !== null) {
           setIsRealChar(true);
+          props.setCharName('지존최지아');
         } else {
           navigate('/', { state: 'notReal' });
           return;
@@ -44,7 +53,7 @@ function Main(props) {
         });
         setCollectibles(arr);
       })
-      .error((e) => {
+      .catch((e) => {
         navigate('/', { state: 'noAuth' });
       });
   }, [props.charName]);

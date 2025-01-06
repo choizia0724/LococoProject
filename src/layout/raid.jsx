@@ -6,10 +6,7 @@ import Mycards from './../component/card';
 const fetchUrl = 'https://developer-lostark.game.onstove.com';
 
 const Raid = () => {
-  const gameContentsArr = [
-    { code: 'challenge-abyss-dungeons', name: '도전 어비스 던전' },
-    { code: 'challenge-guardian-raids', name: '도전 가디언토벌' },
-  ];
+  const gameContentsArr = [];
   const [gameContentsData, setGameContentsData] = useState({});
 
   useEffect(() => {
